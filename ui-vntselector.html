@@ -1,0 +1,12 @@
+<span>
+  <el-select v-model="vnt.activenickvnt" placeholder="Select" v-on:change="setactiveaccount" style="width:180px">
+    <el-option v-for="item in vnt.vntlist" :key="item.uservntid"
+      :label="item.nickname + '@' + item.vntname"
+      :value="item.nickname + '@' + item.vntname">
+    </el-option>
+  </el-select>
+  <!--el-button type="text" @click="loadMixinVntVars()">
+    <el-icon><Refresh /></el-icon>
+  </el-button-->
+  <ui-help v-if="showhelp==true" document="VntSelector" :actlang="language.activelanguage"></ui-help>
+</span>

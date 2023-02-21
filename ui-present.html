@@ -1,0 +1,13 @@
+<span>
+    <el-tooltip placement="bottom" effect="light">
+        <template #content> {{ flangp("0-absent/1-present") }} </template>
+        <el-switch @change="changePresent()"
+            v-model="vnt.present"
+            active-text="1"
+            :active-value=true
+            inactive-text="0"
+            :inactive-value=false>
+        </el-switch>
+    </el-tooltip>
+    <ui-help v-if="showhelp==true" document="Present" :actlang="language.activelanguage"></ui-help>
+</span>

@@ -1,0 +1,177 @@
+<span>
+  <el-menu>
+    <el-sub-menu v-for="item1 in vnt.servicelistl1"
+        :key="item1.key"
+        :index="item1.index">
+      <template #title><el-icon><Document /></el-icon>
+        {{item1.level1}}
+      </template>
+      <el-menu-item-group>
+        <el-menu-item 
+            v-for="item2 in item1.level2"
+            :key="item2.key"
+            :index="item2.index">
+          <el-tooltip
+            effect="light"
+            placement="right"
+          >
+          <template #content> {{item2.svcdescr}}, supported by {{item2.supporters}} user/s </template>
+            <!--el-badge class="servicecounter" :value="item2.supporters" class="" type="primary"-->
+              <el-link @click="callforrequest(item2.svcid, item2.svcdescr)">
+                {{item2.level2}} [{{ item2.supporters }}]
+              </el-link> 
+            <!--/el-badge-->
+          </el-tooltip>
+                <!--el-tooltip placement="right" effect="light">
+                  <template #content> {{item2.svcdescr}}, supported by {{item2.supporters}} user/s </template-->
+                  <!--el-badge :value="item2.supporters" type="primary">
+                    <el-link @click="callforrequest(item2.svcid, item2.svcdescr)">
+                      {{item2.level2}}
+                    </el-link>
+                  </el-badge-->
+                    <!--el-link @click="callforrequest(item2.svcid, item2.svcdescr)">
+                        {{item2.level2}}
+                        <el-badge class="mark" :value="item2.supporters" type="warning"></el-badge>
+                    </el-link-->
+                <!--/el-tooltip-->
+        </el-menu-item>
+      </el-menu-item-group>
+    </el-sub-menu>
+  </el-menu>
+
+<!-- dialog about new request -->
+<el-dialog
+    :title="flangp('Create request to service') + ' ['+activeSvcname+']'"
+    v-model="newrequestVisible"
+    width="90%">
+  <el-main>
+    <p>
+      {{ flangp('Service path') }}
+      <ui-help document="ServicePath" :actlang="language.activelanguage"></ui-help>
+      <!-- show path to service via preservices -->
+      <el-steps :active="10" align-center>
+        <el-step v-for= "item in newrec.presvcList"
+          :key="item.index"
+          :title="item.svccode" :description="item.svcdescr"></el-step>
+      </el-steps>
+    </p>
+    <p>
+      {{ flangp('User/bot path') }}
+      <ui-help document="UserBotPath" :actlang="language.activelanguage"></ui-help>
+      <!-- show path to service via users/bots -->
+      <el-steps :active="10" align-center>
+        <el-step v-for= "item in newrec.usrsvcList.slice().reverse()"
+          :key="item.index"
+          :title="item.nickname"></el-step>
+      </el-steps>
+    </p>
+    <el-form ref="form" label-width="120px">
+      <el-form-item label="Request subject">
+        <el-input type="text" placeholder="subject" v-model="newreqform.subject"></el-input>
+      </el-form-item>
+      <el-form-item label="Comment">
+        <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="for approver or performer"
+            v-model="newreqform.comment">
+        </el-input>
+      </el-form-item>
+    </el-form>
+    <!-- here we need not only show final destination service form to fill,
+    but also all pre-services forms in order to fill on every step -->
+    <!-- form_data_list={{ form_data_list }} -->
+    <div v-for="svc in form_data_list" :key="svc.svcid">
+      <el-card class="box-card">
+        <template #header>
+          <div class="card-header">
+            <span>{{ svc.svccode }} ({{ svc.svcdescr }})</span>
+          </div>
+        </template>
+        <div>
+          <!-- form_data={{ svc }} -->
+          <iframe v-if="svc.newRequestFrameSrc && svc.formfile" id="newRequestFrame" name="myiframe" v-on:load="onLoadIframe" :src="svc.newRequestFrameSrc" width="100%" height="400px" frameBorder="0">
+          </iframe>
+          <el-form v-if="!svc.formfile" ref="form" label-width="120px">
+            <el-form-item label="Request Action">
+              <el-radio-group v-model="newreqform.action">
+                <el-radio
+                  v-for="item in svc.actions"
+                  :key="item.value"
+                  :label="item.action"
+                  :value="item.action">
+                  {{item.description}}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+                v-for="item in svc.variables"
+                :key="item.name"
+                :label="item.description">
+              <el-input :type="item.type" id="item.name" :placeholder="item.name" v-model="item.value"></el-input>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-card>
+    </div>
+    <iframe v-if="newRequestFrameSrc && form_data && form_data.formfile" id="newRequestFrame" name="myiframe" v-on:load="onLoadIframe" :src="newRequestFrameSrc" width="100%" height="400px" frameBorder="0">
+    </iframe>
+    <div v-if="form_data && !form_data.formfile">
+      <!-- 
+        here we need to draw page based on form_data.
+        We have actions and variables
+      -->
+      <el-form v-if="form_data" ref="form" :model="newreqform" label-width="120px">
+        <!--el-form-item label="Request subject">
+          <el-input type="text" placeholder="subject" v-model="newreqform.subject"></el-input>
+        </el-form-item>
+        <el-form-item label="Comment">
+          <el-input
+              type="textarea"
+              :rows="2"
+              placeholder="for approver or performer"
+              v-model="newreqform.comment">
+          </el-input>
+        </el-form-item-->
+        <el-form-item label="Request Action">
+          <el-radio-group v-model="newreqform.action">
+            <el-radio
+              v-for="item in form_data.actions"
+              :key="item.value"
+              :label="item.action"
+              :value="item.action">
+              {{item.description}}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+            v-for="item in form_data.variables"
+            :key="item.name"
+            :label="item.description">
+          <el-input :type="item.type" id="item.name" :placeholder="item.name" v-model="item.value"></el-input>
+        </el-form-item>
+        <!--
+        <input type="file" id="file_input"/>
+        <p id="status">Please select a file</p>
+        <form method="POST" action="/submit_form/">
+          <input type="hidden" id="avatar-url" name="avatar-url" value="/static/default.png">
+          <input type="text" name="username" placeholder="Username">
+          <input type="text" name="full-name" placeholder="Full name">
+          <input type="submit" value="Update profile">
+        </form>
+        -->
+      </el-form>
+      <!--p>action={{ newreqform.action }}</p>
+      <p>data={{ form_data.variables }}</p-->
+    </div>
+    <ui-help document="CreateRequest" :actlang="language.activelanguage"></ui-help>
+  </el-main>
+  <template #footer>
+    <el-button @click="newrequestVisible = false; form_data_list = []">{{flangp('Cancel')}}</el-button>
+    <el-button type="primary" @click="newrequestVisible = false; newrequestSubmit()">{{flangp('Create request')}}</el-button>
+  </template>
+</el-dialog>
+
+</span>
+
+  

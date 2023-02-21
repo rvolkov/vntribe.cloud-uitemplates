@@ -1,0 +1,97 @@
+<span>
+  <el-button type="text" @click="getAccount()">
+    <el-icon><Refresh /></el-icon>
+    {{flangp('Load Account Data')}}
+  </el-button>  
+  <el-collapse v-model="activeNames" accordion>
+  
+    <el-collapse-item name="1">
+      <template #title>
+        <el-icon><House /></el-icon>
+          {{flangp('VNTs you own and users you created')}}
+      </template>
+      <el-main>
+        <div>
+          {{flangp('My account created date')}}: {{ myAccount.created }}
+        </div>
+        <div>
+          {{flangp('My account ID')}}: {{ myAccount.userid }}
+        </div>
+        <div>
+          {{flangp('Account IDs of new users I added')}}:
+          <el-table
+              :data="myAccount.myusers"
+              style="width: 100%">
+            <el-table-column
+              prop="userid"
+              label="UserID"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="created"
+              label="Created">
+            </el-table-column>
+          </el-table>
+        </div>
+        <div>
+          {{flangp('VNTs I created (receive agent royalties for their purchases)')}}:
+          <el-table
+              :data="myAccount.mycvnts"
+              style="width: 100%">
+            <el-table-column
+              prop="vntname"
+              label="VNT Name"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              prop="created"
+              label="Created">
+            </el-table-column>
+          </el-table>
+          {{flangp("(can't transfer to other user)")}}
+        </div>
+        <div>
+          {{flangp('VNTs I own (pay VNT expences)')}}':
+          <el-table
+              :data="myAccount.myovnts"
+              style="width: 100%">
+            <el-table-column
+              prop="vntname"
+              label="VNT Name"
+              width="180">
+            </el-table-column>
+            <el-table-column
+              prop="created"
+              label="Created">
+            </el-table-column>
+          </el-table>
+          {{flangp('[transfer to other user (not implemented yet)]')}}
+        </div>
+      </el-main>
+    </el-collapse-item>
+
+    <el-collapse-item name="2">
+      <template #title>
+        <el-icon style="font-size:14px"><Coin /></el-icon> {{flangp('Your VNT tokens')}}
+      </template>
+      <el-main>
+        <div>
+          {{flangp('Your current VNT account is')}}: {{ vnt.activenickvnt }}
+        </div>
+        <div>
+          {{flangp('Tokens on your current VNT account')}}: {{myAccount.thisvnttokens}}
+        </div>
+        <div>
+          {{flangp('Total tokens in your current VNT')}} {{ vnt.vntname }}: {{myAccount.thisvntalltokens}}
+        </div>
+        <div>
+          {{flangp('You own')}} {{myAccount.percent_tokens}}% {{flangp('of the your current active VNT')}}
+        </div>
+        <div>
+          {{flangp('TOKENS_MANAGEMENT_MESSAGE')}}
+        </div>
+      </el-main>
+    </el-collapse-item>
+
+  </el-collapse>
+</span>

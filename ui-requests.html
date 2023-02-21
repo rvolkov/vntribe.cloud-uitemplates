@@ -1,0 +1,443 @@
+<!-- messages boxes -->
+<el-tabs tab-position="top" v-model="activeName" @tab-click="handleClick">
+  <!-- Inbox begin -->
+  <el-tab-pane name="inbox">
+    <template #label>
+      <p>
+        <el-tooltip placement="top-start" effect="dark">
+          <template #content> {{ flangp("Requests to work with") }} </template>
+          <el-badge class="mark" :value="inboxListlength">
+            <el-icon><Message /></el-icon>
+          </el-badge>
+        </el-tooltip>
+      </p>
+    </template>
+    {{ flangp("Inbox") }}
+    <el-table v-if="inboxList"
+        :data="inboxList"
+        :default-sort = "{prop: 'changed2', order: 'descending'}"
+        style="width: 100%"
+        highlight-current-row
+        @current-change="handleCurrentChange">
+      <el-table-column
+          prop="changed2"
+          label="Date"
+          sortable
+          width="165">
+        <template #default="scope">
+          <el-icon><Stopwatch /></el-icon>
+          <span style="margin-left: 1px">{{ scope.row.changed }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+          prop="msg_from"
+          label="From"
+          width="110">
+      </el-table-column>
+      <el-table-column
+          prop="msg_to"
+          label="To"
+          width="110">
+      </el-table-column>
+      <el-table-column
+          prop="subject"
+          label="Subject">
+      </el-table-column>
+    </el-table>
+  </el-tab-pane>
+  <!-- Inbox end -->
+
+  <!-- My requests begin -->
+  <el-tab-pane name="myrequests">
+    <template #label>
+      <el-tooltip placement="top-start" effect="dark">
+        <template #content> {{ flangp("Track progress of sent requests") }} </template>
+        <el-badge class="mark" :value="myrequestsListlength" type="primary">
+          <el-icon><View /></el-icon>
+        </el-badge>
+      </el-tooltip>
+    </template>
+    {{ flangp("My requests") }}
+    <el-table v-if="myrequestsList"
+        :data="myrequestsList"
+        :default-sort = "{prop: 'changed', order: 'descending'}"
+        style="width: 100%"
+        highlight-current-row
+        @current-change="handleMyRequestsCurrentChange">
+      <el-table-column
+          prop="changed"
+          label="Date"
+          sortable
+          width="165">
+      </el-table-column>
+      <el-table-column
+          prop="msg_from"
+          label="From"
+          width="110">
+      </el-table-column>
+      <el-table-column
+          prop="msg_to"
+          label="To"
+          width="110">
+      </el-table-column>
+      <el-table-column
+          prop="cur_name"
+          label="Now"
+          width="90">
+      </el-table-column>
+      <el-table-column
+          prop="subject"
+          label="Subject">
+      </el-table-column>
+    </el-table>
+  </el-tab-pane>
+  <!-- My requests end -->
+
+  <!-- Proceed begin -->
+  <el-tab-pane name="proceed">
+    <template #label>
+      <el-tooltip placement="top-start" effect="dark">
+        <template #content> {{ flangp("Archive") }} </template>
+        <el-badge class="mark" :value="proceedListlength" type="primary">
+          <el-icon><CircleCheck /></el-icon>
+        </el-badge>
+      </el-tooltip>
+    </template>
+    {{ flangp("Archive") }}
+    <!-- :default-sort = "{prop: 'changed', order: 'descending'}" -->
+    <!-- :default-sort = "{prop: 'changed', order: 'ascending'}" -->
+    <el-table v-if="proceedList"
+        :data="proceedList"
+        :default-sort = "{prop: 'changed', order: 'ascending'}"
+        style="width: 100%"
+        highlight-current-row
+        @current-change="handleArchiveCurrentChange">
+      <el-table-column
+          prop="changed"
+          label="Date"
+          sortable
+          width="165">
+      </el-table-column>
+      <el-table-column
+          prop="msg_from"
+          label="From"
+          width="110">
+      </el-table-column>
+      <el-table-column
+          prop="msg_to"
+          label="To"
+          width="110">
+      </el-table-column>
+      <el-table-column
+          prop="subject"
+          label="Subject">
+      </el-table-column>
+    </el-table>
+  </el-tab-pane>
+  <!-- Proceed end -->
+
+</el-tabs>
+  
+
+<!-- dialog about process of existed request v-if="currentRow !== null"
+    :title="'Process '+currentRow.action+' From '+currentRow.src_name+'/'+currentRow.src_svc_name+' To '+currentRow.dst_name+'/'+currentRow.dst_svc_name"
+-->
+<el-dialog v-if="currentRow !== null"
+    v-model="requestProcessVisible"
+    :title="'Process '+currentRow.action+' From '+currentRow.src_name+'/'+currentRow.src_svc_name+' To '+currentRow.dst_name+'/'+currentRow.dst_svc_name"
+    width="90%">
+  <el-main>
+    <span>
+      <!--el-descriptions
+          class="margin-top"
+          title="With border"
+          :column="3"
+          size="large"
+          border>
+      </el-descriptions-->
+      <p>From: {{currentRow.src_name}}/{{currentRow.src_svc_name}}</p>
+      <p>To: {{currentRow.dst_name}}/{{currentRow.dst_svc_name}}</p>
+      <p>Subject: {{currentRow.subject}}</p>
+      <p>Comment: {{currentRow.comment}}</p>
+      <p>Operation: {{currentRow.operation}}</p>
+      <!--pre>{{ currentRow.formbody_json | pretty }}</pre-->
+      {{ flangp("Message variables") }}:
+      <el-table
+          :data="currentRow.formbody_json"
+          style="width: 100%"
+          stripe border>
+        <el-table-column
+            prop="name"
+            label="Variable"
+            width="180">
+        </el-table-column>
+        <el-table-column
+              prop="value"
+              label="Value">
+          <template #default="scope">
+            <span>{{ scope.row.value }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      {{ flangp("Attach files") }}:
+      <ui-attach></ui-attach>
+      {{ flangp("Attached files") }}:
+      <ui-files></ui-files>
+
+      <span v-if="req_log">
+        {{ flangp("Message log") }}:
+        <el-table
+            :data="req_log"
+            style="width: 100%">
+          <el-table-column
+              prop="changed"
+              label="Changed"
+              width="230">
+          </el-table-column>
+          <el-table-column
+              prop="changername"
+              label="By"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="action"
+              label="Action"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="comment"
+              label="Status">
+          </el-table-column>
+        </el-table>
+      </span>
+  
+      <!-- if destination to my service, ask for Accept, if not - Approve 
+      {{currentRow}}-->
+      <!--CurUservntid: {{currentRow.cur_uservntid}}
+      SrvUservntid: {{currentRow.src_uservntid}}
+      DstUservntid: {{currentRow.dst_uservntid}}
+      DstPresvcid: {{currentRow.dst_presvcid}}
+      myservicelist: {{vnt.myservicelist}}
+      action: {{currentRow.action}}-->
+
+      <el-form ref="form" label-width="180px">
+        <!-- BEGIN of REQUEST -->
+        <span v-if="currentRow.action == 'Request'">
+          <!-- approver comment -->
+          <el-form-item label="Approver comment" v-if="currentRow.cur_uservntid != currentRow.src_uservntid && !isMyService(currentRow.dst_svcid)">
+            <el-input type="text" placeholder="comment" v-model="reqComment"></el-input>
+          </el-form-item>
+          <el-form-item label="What to do with this request">
+            <el-radio-group v-model="reqProcess">
+              <!-- if you created this request and need to approve activeUservntid -->
+              <span v-if="currentRow.cur_uservntid == currentRow.src_uservntid && !isMyService(currentRow.dst_presvcid)">
+                <el-radio-button label="go" value="go">Go - send request</el-radio-button>
+                <el-radio-button label="cancel" value="cancel">Cancel - cancel this request</el-radio-button>
+              </span>
+              <!-- if you are Curator -->
+              <span v-if="currentRow.cur_uservntid != currentRow.src_uservntid && !isMyService(currentRow.dst_presvcid)">
+                <el-radio-button label="allow" value="allow">Allow - allow this request to go next hop</el-radio-button>
+                <el-radio-button label="block" value="block">Block - block request and return Blocked response</el-radio-button>
+              </span>
+              <!-- if you are service owner and need to work-->
+              <span v-if="isMyService(currentRow.dst_presvcid)">
+                <el-form-item label="Service owner comment">
+                  <el-input type="text" placeholder="comment" v-model="reqComment"></el-input>
+                </el-form-item>
+                <!-- If you are end service user or intermediate service node -->
+                <el-radio-button label="accept" value="accept">Accept - I started to work on request</el-radio-button><!-- accept - no reply, just change status -->
+                <el-radio-button label="reject" value="reject">Reject - return back reject message</el-radio-button><!-- reject - generate reject message -->
+                <!-- if you are end/intermediate service user and finished to do your service (have message in my messages box) -->
+                <el-radio-button label="done" value="done">Done - I have done processing request</el-radio-button> <!-- generate Done response -->
+              </span>
+            </el-radio-group>
+          </el-form-item>
+        </span>
+        <!-- END of REQUEST -->
+
+        <!-- BEGIN of RESPONSE -->
+        <span v-if="currentRow.action == 'Response'">
+          <el-form-item label="What to do with Response">
+            <el-radio-group v-model="reqProcess">
+              <span v-if="currentRow.cur_uservntid === currentRow.dst_uservntid">
+                <!-- if you are on request reply path: forward if you are on path or archive if you endpoint -->
+                <el-radio-button label="finalack" v-model="reqProcess">Archive - move to Archive queue</el-radio-button>
+              </span>
+              <span v-if="currentRow.cur_uservntid != currentRow.dst_uservntid">
+                <!-- if you are on request reply path: forward if you are on path or archive if you endpoint -->
+                <el-radio-button label="ack" v-model="reqProcess">Ack - you saw it, let it continue</el-radio-button>
+              </span>
+            </el-radio-group>
+          </el-form-item>
+        </span>
+        <!-- END of RESPONSE -->
+
+      </el-form>
+    </span>
+    <div>
+{% if lang != "rus" %}
+  Here you select what to do with request or response. For Request you need to approve or reject it as a filter as
+  you are on the path from user to service request or from service to user response. If you are Service owner,
+  you need to work on this Request. If this is response to your request you can only send this message to Archive.
+{% endif %}
+{% if lang == "rus" %}
+  Надо выбрать что делать с запросом или ответом. Для запроса надо разрешить (Approve) или запретить (Reject)
+  на пути между пользователя до сервиса. Если вы владелец сервиса, вам надо начать работать над этим запросом.
+  Если это ответ на ваш запрос то вы можете только послать его в Архив.
+{% endif %}
+    </div>
+  </el-main>
+  <template #footer>
+    <el-button @click="requestProcessVisible = false; reqProcess=null; reqComment=''">Cancel</el-button>
+    <el-button type="primary" @click="requestProcessSubmit(currentRow.reqid, reqProcess, reqComment)">Confirm</el-button>
+  </template>
+</el-dialog>
+
+<!-- BEGIN show my request message contents -->
+<el-dialog v-if="currentRow !== null"
+    :title="'View '+currentRow.action+' From '+currentRow.src_name+'/'+currentRow.src_svc_name+' To '+currentRow.dst_name+'/'+currentRow.dst_svc_name"
+    v-model="requestMyRequestsProcessVisible"
+    width="90%">
+  <el-main>
+    <span>
+      <p>From: {{currentRow.src_name}}/{{currentRow.src_svc_name}}</p>
+      <p>To: {{currentRow.dst_name}}/{{currentRow.dst_svc_name}}</p>
+      <p>Subject: {{currentRow.subject}}</p>
+      <p>Comment: {{currentRow.comment}}</p>
+      <p>Operation: {{currentRow.operation}}</p>
+      <!--pre>{{ currentRow.formbody_json | pretty }}</pre-->
+
+      {{ flangp("Message variables") }}:
+      <el-table
+          :data="currentRow.formbody_json"
+          style="width: 100%"
+          stripe border>
+        <el-table-column
+            prop="name"
+            label="Variable"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="value"
+            label="Value">
+          <template #default="scope">
+            <span>{{ scope.row.value }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      {{ flangp("Attached files") }}:
+      <ui-files></ui-files>
+
+      <span v-if="req_log">
+        {{ flangp("Message log") }}:
+        <el-table
+            :data="req_log"
+            style="width: 100%">
+          <el-table-column
+              prop="changed"
+              label="Changed"
+              width="230">
+          </el-table-column>
+          <el-table-column
+              prop="changername"
+              label="By"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="action"
+              label="Action"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="comment"
+              label="Status">
+          </el-table-column>
+        </el-table>
+      </span>
+    </span>
+  </el-main>
+  <template #footer>
+    <el-button type="primary" @click="requestMyRequestsProcessVisible = false;">Ok</el-button>
+  </template>
+</el-dialog>
+<!-- END show my request message contents -->
+
+<!-- BEGIN show archived message contents -->
+<el-dialog v-if="currentRow !== null"
+    :title="'View archived '+currentRow.action+' From '+currentRow.src_name+'/'+currentRow.src_svc_name+' To '+currentRow.dst_name+'/'+currentRow.dst_svc_name"
+    v-model="requestArchiveProcessVisible"
+    width="90%">
+  <el-main>
+    <span>
+      <p>From: {{currentRow.src_name}}/{{currentRow.src_svc_name}}</p>
+      <p>To: {{currentRow.dst_name}}/{{currentRow.dst_svc_name}}</p>
+      <p>Subject: {{currentRow.subject}}</p>
+      <p>Comment: {{currentRow.comment}}</p>
+      <p>Operation: {{currentRow.operation}}</p>
+
+      {{ flangp("Message variables") }}:
+      <el-table
+          :data="currentRow.formbody_json"
+          style="width: 100%"
+          stripe border>
+        <el-table-column
+            prop="name"
+            label="Variable"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="value"
+            label="Value">
+          <template #default="scope">
+            <span>{{ scope.row.value }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      {{ flangp("Attached files") }}:
+      <ui-files></ui-files>
+
+      <span v-if="req_log">
+        {{ flangp("Message log") }}:
+        <el-table
+            :data="req_log"
+            style="width: 100%">
+          <el-table-column
+              prop="changed"
+              label="Changed"
+              width="230">
+          </el-table-column>
+          <el-table-column
+              prop="changername"
+              label="By"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="action"
+              label="Action"
+              width="100">
+          </el-table-column>
+          <el-table-column
+              prop="comment"
+              label="Status">
+          </el-table-column>
+        </el-table>
+      </span>
+      <el-form ref="form" label-width="180px">
+        <el-form-item label="What to do with message">
+          <el-radio-group v-model="reqArchProcess">
+            <el-radio-button label="delete" v-model="reqArchProcess">Delete- delete from Archive queue permanently</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </span>
+  </el-main>
+  <template #footer>
+    <el-button @click="requestArchiveProcessVisible = false; reqArchProcess=null;">Cancel</el-button>
+    <el-button type="primary" @click="requestArchSubmit(currentRow.reqid, reqArchProcess)">Confirm</el-button>
+  </template>
+</el-dialog>
+<!-- END show archived message contents -->
+
+

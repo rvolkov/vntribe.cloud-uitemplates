@@ -1,0 +1,210 @@
+<!-- 
+    
+    uit-base-script.html
+    User Interface Template - Base script
+
+    Это скрипт который обеспечивает работу всех видов узер интерфейсов
+
+-->
+
+<script type="text/javascript">
+
+// set Authorization header used by axios in the every call
+var authHeader = 'JWT ' + localStorage.token;
+axios.defaults.headers.common['Authorization'] = authHeader;
+
+// check that JWT from server is in correct format
+function isValidJwt(jwt) {  
+  if (!jwt || jwt.split('.').length < 3) {
+    return false;
+  }
+  const data = JSON.parse(atob(jwt.split('.')[1]));
+  const exp = new Date(data.exp * 1000); // JS deals with dates in milliseconds since epoch
+  const now = new Date();
+  return now < exp;
+}
+
+// == this code is startin on page load to check if token is ok ==
+if(!isValidJwt(localStorage.token)) {
+  console.log("WRONG TOKEN is in localStorage.token");
+  log_out();
+}
+ 
+// work with iFrame for NEW MESSAGE iframe
+function findIframeByName(name) {
+  return _.find(window.frames, frame => frame.name === name);
+}
+
+// To log out, we just need to remove the token and go to the root page
+function log_out() {
+  localStorage.removeItem('token');
+  window.sessionStorage.token = "";
+  window.location.href = "/";
+};
+
+// VUE application
+const { createApp } = Vue;
+
+const vnt = createApp({
+  mixins: [mixinlang, mixinvnt],
+  components: {
+    "ui-text": uiText,
+    "ui-docs": uiDocs,
+    "ui-account": uiAccount,
+    "ui-arules": uiArules,
+    "ui-attach": uiAttach,
+    "ui-files": uiFiles,
+    "ui-groups": uiGroups,
+    "ui-help": uiHelp,
+    "ui-language": uiLanguage,
+    "ui-myservices": uiMyservices,
+    "ui-news": uiNews,
+    "ui-present": uiPresent,
+    "ui-requests": uiRequests,
+    "ui-services": uiServices,
+    "ui-sfilter": uiSfilter,
+    "ui-splash": uiSplash,
+    "ui-support": uiSupport,
+    "ui-topmenu": uiTopmenu,
+    "ui-topology": uiTopology,
+    "ui-uitemplate": uiUitemplate,
+    "ui-vntcreate": uiVntcreate,
+    "ui-vntdel": uiVntdel,
+    "ui-vntselector": uiVntselector,
+  },
+  data() {
+    return {
+      messages_list: [],   // list for error messages which should pop up on the screen
+      servicelist: null,      // list of available services for user
+      servicelistl1: [],    // list of services level1
+      servicelistl2: null,    // list of services level2
+      servicelistl3: null,    // list of services level3
+      servicelistl4: null,    // list of services level4
+      eventValForResend: null,
+      activeTabName: "vnt",   // from which tab start first menu tab
+    }
+  },
+  methods: {
+    // To log out, we just need to remove the token
+    logout: function() {
+      log_out();
+    },
+    generateKey(item, index) {
+      const uniqueKey = `${item}-${index}`;
+      return uniqueKey;
+    },
+    // read log msgs from the server
+    readLogsFromServer() {
+      //console.log("inside readLogsFromServer activeuservntid=", this.vnt.activeuservntid);
+      axios
+        .get('/api/msgs?uservntid='+this.vnt.activeuservntid)
+        .then(response => {
+          this.messages_list = response.data.items;
+          //console.log("MESSAGES RECEIVED:", this.messages_list);
+          for(var i = 0; i < this.messages_list.length; i++) {
+            //console.log("MESSAGE RECEIVED:", this.messages_list[i]);
+            //ElNotification({
+            //  title: 'Title',
+            //  message: h('i', { style: 'color: teal' }, 'This is a reminder'),
+            //});
+            this.$notify.error({
+              title: 'Error',
+              message: this.flangp(this.messages_list[i]),
+              type: 'error',
+            });
+            //const h = this.$createElement;
+            //this.$notify.error({
+            //  title: 'Error',
+            //  message: h('i', { style: 'color: teal' }, this.flangp(this.messages_list[i])),
+            //  //position: 'bottom-right',
+            //  duration: 20000
+            //});
+          }
+        });
+      setTimeout(() => this.readLogsFromServer(), 10000);
+    },
+
+    // BEGIN vnt-services componet emit acceptor
+    vnt_services_emit1(value) {
+      this.vnt_services_newrequest = value;
+      this.newrequestvisible = this.vnt_services_newrequest.newrequestvisible;
+      this.newrequestframesrc = this.vnt_services_newrequest.newrequestframesrc;
+      this.activesvcname = this.vnt_services_newrequest.activesvcname;
+      this.activesvcid = this.vnt_services_newrequest.activesvcid;
+    },
+    vnt_services_emit2(value) {
+      this.form_data = value;
+    },
+    vnt_services_emit3(value) {
+      this.newrec.presvclist = value;
+    },
+    vnt_services_emit4(value) {
+      this.newrec.usrsvclist = value;
+    },
+    // END vnt-services componet emit acceptor
+  },
+  // call this code as I guess after (created)
+  mounted: function () {
+    //console.log("language.activelanguage1=", language.activelanguage);
+    this.loadMixinlangVars(); // read first time everything about languages
+    //console.log("language.activelanguage2=", language.activelanguage);
+    this.loadMixinVntVars();  // read first time everything about vnt
+    this.groupCall();
+    /*
+    var object = this;
+    var readLogsFromServer = function(ooo) {
+      axios
+        .get('/api/msgs?uservntid='+ooo.vnt.activeuservntid)
+        .then(response => {
+          ooo.messages_list = response.data.items;
+          console.log("MESSAGES RECEIVED:", response.data.items);
+          for(var i = 0; i < response.data.items.length; i++) {
+            //console.log("MESSAGE RECEIVED:", this.messages_list[i]);
+            const h = ooo.$createElement;
+            ooo.$notify.error({
+              title: 'Error',
+              message: h('i', { style: 'color: teal' }, ooo.flangp(response.data.items[i])),
+              //position: 'bottom-right',
+              duration: 20000
+            });
+          }
+        });
+    }
+    */
+    //var loadData = function() {
+      //console.log("inside loadData");
+      //this.readLogsFromServer();
+      //console.log("inside loadData activeuservntid=", .vnt.activeuservntid);
+      //loadIData2();
+      //if(appdata.vnt.activeuservntid) {
+        //ooo = this;
+        //readLogsFromServer();
+      //}
+      //Event.fire('PeriodicReadTask', {});
+      //setTimeout(loadData(), 10000); // run every 10 seconds
+    //};
+    //console.log("before loadData timeout");
+    //setTimeout(loadData(),3000); // first run after 3 seconds
+    setTimeout(() => this.readLogsFromServer(), 2000);
+    //const ooo = this;
+    //setTimeout(ooo.readLogsFromServer(ooo),3000); 
+  }
+});
+vnt.use(ElementPlus);
+//vnt.use(ElNotification);
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  vnt.component(key, component);
+}
+vnt.use(VueShowdownPlugin, {
+  flavor: "original",
+  options: {
+    emoji: true,
+  },
+});
+//const appdata = 
+vnt.mount('#vnt');
+</script>
+
+
+
+

@@ -1,0 +1,209 @@
+<span>
+
+<el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal">
+    <!-- @select="handleSelect"-->
+    <el-menu-item index="1">
+        <ui-vntselector showhelp="false"></ui-vntselector>
+    </el-menu-item>
+
+    <el-submenu index="2">
+      <template #title>
+        <el-tooltip placement="right" effect="light">
+          <template #content> {{flangp('VNT topology')}} </template>
+          <el-icon><Share /></el-icon>
+        </el-tooltip>
+      </template>
+      <el-menu-item v-once @click="groupsmapVisible=true">
+        <el-icon><MapLocation /></el-icon>{{flangp('Show VNT structure')}}
+      </el-menu-item>
+      
+      <ui-groups mode="menu"></ui-groups>
+      
+    </el-submenu>
+
+    <el-submenu index="3">
+      <template #title>
+        <el-tooltip placement="right" effect="light">
+          <template #content> {{flangp('my services')}} </template>
+          <el-icon><Service /></el-icon>
+        </el-tooltip>
+      </template>  
+      <ui-myservices mode="menu"></ui-myservices>
+    </el-submenu>
+    
+    <el-submenu index="4">
+      <template #title>
+        <el-tooltip placement="right" effect="light">
+          <template #content> {{flangp('options')}} </template>
+          <el-icon><Setting /></el-icon>
+        </el-tooltip>
+      </template>
+      <el-tooltip placement="left" effect="light">
+        <template #content> Manage filters for available services for you and your teams </template>
+        <el-menu-item index="4-1" @click="svcfilterVisible = true">
+          <el-icon><Umbrella /></el-icon>
+          {{flangp('Services Filter')}}
+        </el-menu-item>
+      </el-tooltip>
+      <el-tooltip placement="left" effect="light">
+        <template #content> Manage rules to automatical processing of incoming messages </template>
+        <el-menu-item index="4-2" @click="autorulesVisible = true">
+          <el-icon><SetUp /></el-icon>{{flangp('Automatic Rules')}}
+        </el-menu-item>
+      </el-tooltip>
+      <el-tooltip placement="left" effect="light">
+        <template #content> {{flangp('Account Management')}} </template>
+        <el-menu-item index="4-3" @click="accountVisible = true">
+          <el-icon><User /></el-icon>
+          {{flangp('Account')}}
+        </el-menu-item>
+      </el-tooltip>
+      
+      <el-menu-item index="4-6">
+        <el-tooltip placement="left" effect="light">
+          <template #content> {{flangp('Documentation and Support Cases')}} </template>
+          <el-link :underline="false" href="/support" target="_blank">
+            <el-icon><Help /></el-icon>
+            {{flangp('Docs and Support')}}
+          </el-link>
+        </el-tooltip>
+      </el-menu-item>
+      
+    </el-submenu>
+    <el-menu-item index="5">
+      <ui-present showhelp="false"></ui-present>
+    </el-menu-item>
+    
+    <!-- ToDo: show campaign and voting only in case if user has any Shares in profile? -->
+    <!--el-menu-item index="6">
+      <el-tooltip placement="bottom" effect="light">
+        <div slot="content">campaign and voting</div>
+        <a href="/vote" target="_blank"><i class="el-icon-s-opportunity"></i></a>
+      </el-tooltip>
+    </el-menu-item-->
+    <!--el-menu-item index="7">
+      <el-tooltip placement="bottom" effect="light">
+        <div slot="content">info</div>
+        <a href="/info" target="_blank"><i class="el-icon-info"></i></a>
+      </el-tooltip>
+    </el-menu-item-->
+    <!--el-menu-item index="8">
+      <el-tooltip placement="bottom" effect="light">
+        <div slot="content">Docs and support</div>
+        <a href="/support" target="_blank"><i class="el-icon-help"></i></a>
+      </el-tooltip>
+    </el-menu-item-->
+    <el-menu-item index="9">
+      <el-tooltip placement="bottom" effect="light">
+        <template #content> {{flangp('VNT News')}} </template>
+        <vnt-news>
+        </vnt-news>
+        <!--a target="_blank" @click="drawer = true"><i class="el-icon-news"></i></a-->
+      </el-tooltip>
+    </el-menu-item>
+
+    <el-menu-item index="10">
+      <el-tooltip placement="bottom" effect="light">
+        <template #content> {{flangp('Help')}} </template>
+        <ui-help document="MainMenu" :actlang="language.activelanguage"></ui-help>
+      </el-tooltip>
+    </el-menu-item>
+    
+    <el-menu-item index="11" style="position:absolute;right:0px">
+      <el-tooltip placement="bottom" effect="light">
+        <template #content> {{flangp('log off')}} </template>
+        <a v-on:click="logout">
+          <el-icon><Bell /></el-icon>
+        </a>
+      </el-tooltip>
+    </el-menu-item>
+  </el-menu>
+
+
+<!-- groups map window -->
+<el-dialog
+  title="VNT Map"
+  v-model="groupsmapVisible"
+  width="90%">
+    <el-main>
+        <ui-topology dialog="true"></ui-topology>
+    </el-main>
+    <template #footer>
+    <el-button type="primary" @click="groupsmapVisible = false">Ok</el-button>
+    </template>
+</el-dialog>
+
+
+<!-- account config window -->
+<el-dialog
+title="Account"
+v-model="accountVisible"
+width="50%">
+<template #title>
+  Account<ui-help document="MyAccountHelp" :actlang="language.activelanguage"></ui-help>
+</template>
+    <div>
+        <ui-account dialog="true"></ui-account>
+    </div>
+    <div>
+        <el-form ref="form" label-width="120px">
+            <el-form-item label="interface language">
+                <ui-language dialog="true"></ui-language>
+            </el-form-item>
+                    <!-- VNT template -->
+    {% if lang != "rus" %}
+    User Template: use different VNT pages for different purposes, for example if this user is
+    customer of restaurant we need to show only one Service - order meal. If this user is Cook - need to show
+    only requests without many controls
+    {% endif %}
+    {% if lang == "rus" %}
+    Выбрать вариант интерфейса этого пользователя в этом VNT
+    {% endif %}
+            <el-form-item label="UI Template">
+                <ui-uitemplate dialog="true"></ui-uitemplate>
+            </el-form-item>
+        </el-form>
+
+            [ <ui-vntcreate dialog="true"></ui-vntcreate> |
+  
+            <ui-vntdel dialog="true"></ui-vntdel> ]
+ 
+    </div>
+    <template #footer>
+<el-button type="primary" @click="accountVisible = false" round>Ok</el-button>
+    </template>
+</el-dialog>
+
+<!-- service filter config window -->
+<el-dialog
+title="Services Filter"
+v-model="svcfilterVisible"
+width="50%">
+<el-main>
+<div>
+Services Filter doesn't filter services, injected by your groups members. We use Regular Expression form for the
+filter masks, for example "admin" matches only "admin", "a.*" matches all the services starting from the letter "a".
+</div>
+    <ui-sfilter dialog="true"></ui-sfilter>
+</el-main>
+<template #footer>
+<el-button type="primary" @click="svcfilterVisible = false">Ok</el-button>
+</template>
+</el-dialog>
+
+ <!-- automatic rules config window -->
+ <el-dialog
+ title="Automatic Rules for Requests"
+ v-model="autorulesVisible"
+ width="50%">
+<el-main>
+ <div>Requests, matched to these rules, will be approved and forwarded automatically. Masks are in regular expression form, 
+   for example ".*" matches all, "admin.*" matches services started from the word "admin"</div>
+   <ui-arules dialog="true"></ui-arules>
+</el-main>
+<template #footer>
+   <el-button type="primary" @click="autorulesVisible = false">Ok</el-button>
+</template>
+</el-dialog>
+
+</span>

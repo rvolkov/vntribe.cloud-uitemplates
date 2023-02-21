@@ -1,0 +1,256 @@
+<!-- 
+    uit-simple.html
+    Start user interface template
+-->
+
+{% include 'uit-header.html' %}
+
+<style>
+[v-cloak] > * { display:none }
+[v-cloak]::before { content: "Loading…" }   
+</style>
+
+
+<div id="vnt" v-cloak>
+    <el-container>
+    <!-- style="height: 500px;" -->
+    <el-tabs v-model="activeTabName" tab-position="left">
+        <el-tab-pane name="about">
+            <template #label>
+                <span>
+                    <el-icon><Notebook /></el-icon>
+                    {{ flangp('About') }}
+                </span>
+            </template>
+            <ui-text document="Welcome" :activelanguage="language.activelanguage" :key="language.activelanguage"></ui-text>
+        </el-tab-pane>
+        <el-tab-pane name="vnt">
+            <template #label>
+                <span>
+                    <el-icon><Memo /></el-icon> {{ vnt.nickname+'@'+vnt.vntname }}
+                </span>
+            </template>
+            <h2>{{ vnt.nickname }}@{{ vnt.vntname }} <ui-help document="Vnt" :actlang="language.activelanguage"></ui-help></h2>
+            <ul>
+                <li>
+                    {{ flangp('Your name@vnt') }} -
+                    <!-- :vnt="vnt" -->
+                    <ui-vntselector :vnt="vnt" :key="vnt"></ui-vntselector>
+                    {{ flangp('ABOUT_VNT_SWITCH') }}
+                </li>
+                <li>
+                    {{ flangp('Your availability') }} - 
+                    <ui-present :vnt="vnt" :key="vnt"></ui-present>
+                    {{ flangp('ABOUT_PRESENT') }}
+                </li>
+                <!--li>
+                    {{ flangp('Your application language') }} -
+                    <ui-language :vnt="vnt" :key="generateKey(vnt, language.activelanguage)"></ui-language>
+                </li>
+                <li>
+                    {{ flangp('Your application user view') }} -
+                    <ui-uitemplate :vnt="vnt" :key="vnt"></ui-uitemplate>
+                </li-->
+                <li>
+                    [ <ui-vntcreate :vnt="vnt" :key="vnt"></ui-vntcreate> | <ui-vntdel :vnt="vnt" :key="vnt"></ui-vntdel> ]
+                    {{ flangp('ABOUT_VNT_CREATE_DEL') }}
+                </li>
+
+            </ul>
+
+            <el-tabs type="border-card">
+
+                <!-- BEGIN topology map -->
+                <el-tab-pane>
+                    <template #label>
+                        <span>
+                            <el-icon><Location /></el-icon>
+                            {{ flangp('Topology') }}
+                        </span>
+                    </template>
+                    <h3>
+                        {{ flangp('VNT Topology Map') }}
+                        <ui-help document="VntTopoMap" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-topology></ui-topology>
+                </el-tab-pane>
+                <!-- END topology map -->
+
+                <!-- BEGIN your groups -->
+                <el-tab-pane>
+                    <template #label>
+                        <span>
+                            <el-icon><Soccer /></el-icon>
+                            {{ flangp('Your Groups') }}</span>
+                    </template>
+                    <h3>
+                        {{ flangp('Groups you are member of') }}
+                        <ui-help document="YourGroups" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-groups></ui-groups>
+                <!-- END your groups -->
+                
+                <!-- BEGIN your services -->
+                </el-tab-pane>
+                <el-tab-pane>
+                    <template #label>
+                        <span><el-icon><Grid /></el-icon> {{ flangp('Your Services') }}</span>
+                    </template>
+                    <h3>
+                        {{ flangp('Services/Functions/Operations you do for others') }}
+                        <ui-help document="YourServices" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-myservices></ui-myservices>
+                </el-tab-pane>
+                <!-- END your services -->
+
+                <!-- BEGIN services filters -->
+                <el-tab-pane>
+                    <template #label>
+                        <span><el-icon><Umbrella /></el-icon> {{ flangp('Services Filters') }}</span>
+                    </template>
+                    <h3>
+                        {{ flangp('Services Filters') }}
+                        <ui-help document="ServFilters" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-sfilter></ui-sfilter>
+                </el-tab-pane>
+                <!-- END services filters -->
+
+                <!-- BEGIN auto rules -->
+                <el-tab-pane>
+                    <template #label>
+                        <span><el-icon><Operation /></el-icon> {{ flangp('Autorules') }}</span>
+                    </template>
+                    <h3>
+                        {{ flangp('Automatic Rules') }}
+                        <ui-help document="AutoRules" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-arules :vnt="vnt"></ui-arules>
+                </el-tab-pane>
+                <!-- END auto rules -->
+
+                <!-- BEGIN account -->
+                <el-tab-pane>
+                    <template #label>
+                        <span><el-icon><House /></el-icon> {{ flangp('Account') }}</span>
+                    </template>
+                    <h3>
+                        {{ flangp('Your Account') }}
+                        <ui-help document="Account" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-account :vnt="vnt"></ui-account>
+                </el-tab-pane>
+                <!-- END account -->
+
+              </el-tabs>
+        </el-tab-pane>
+
+        <el-tab-pane name="requests">
+            <template #label>
+                <span>
+                    <el-icon><Message /></el-icon> {{ flangp('Services/Requests') }}
+                </span>
+            </template>
+            <el-tabs type="border-card">
+                <!-- BEGIN services list -->
+                <el-tab-pane :label="flangp('Services')">
+                    <h3>
+                        {{flangp('Create request to Service/Function/Operation')}}
+                        <ui-help document="Services" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-services :vnt="vnt"></ui-services>
+                </el-tab-pane>
+                <!-- END services list -->
+
+                <!-- BEGIN requests list -->
+                <el-tab-pane :label="flangp('Requests')">
+                    <h3>
+                        {{flangp('Inbox/My Requests/Archive')}}
+                        <ui-help document="Requests" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-requests :vnt="vnt"></ui-requests>
+                </el-tab-pane>
+                <!-- END requests list -->
+            </el-tabs>
+        </el-tab-pane>
+
+        <el-tab-pane name="support">
+            <template #label>
+                <span>
+                    <el-icon><Iphone /></el-icon> {{ flangp('Support') }}
+                </span>
+            </template>
+            <h3>
+                {{flangp('Help/Support')}}
+                <ui-help document="Support" :actlang="language.activelanguage"></ui-help>
+            </h3>
+            <el-tabs type="border-card">
+
+                <!-- BEGIN news -->
+                <!--el-tab-pane>
+                    <template #label>
+                        <span><el-icon><Iphone /></el-icon> {{ flangp('News') }}</span>
+                    </template>
+                    <h3>
+                        {{flangp('VNT News')}}
+                        <ui-help document="VntTopoMap" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-news></ui-news>
+                </el-tab-pane-->
+                <!-- END news -->
+
+                <!-- BEGIN docs -->
+                <el-tab-pane>
+                    <template #label>
+                        <span><el-icon><Iphone /></el-icon> {{ flangp('Docs') }}</span>
+                    </template>
+                    <h3>
+                        {{flangp('Documentation')}}
+                    </h3>
+                    <ui-docs document="Docs"></ui-docs>
+                </el-tab-pane>
+                <!-- END docs -->
+
+                <!-- BEGIN support -->
+                <el-tab-pane>
+                    <template #label>
+                        <span><el-icon><Iphone /></el-icon> {{ flangp('Support') }}</span>
+                    </template>
+                    <h3>
+                        {{flangp('Support Cases')}}
+                        <ui-help document="Cases" :actlang="language.activelanguage"></ui-help>
+                    </h3>
+                    <ui-support></ui-support>
+                </el-tab-pane>
+                <!-- END support -->
+
+            </el-tabs>
+        </el-tab-pane>
+
+        <el-tab-pane name="logout">
+            <template #label>
+                <span><el-icon><Close /></el-icon> {{ flangp('Log Out') }}</span>
+            </template>
+            <h3>
+                {{flangp('Log Out')}}
+            </h3>
+            <el-tooltip placement="bottom" effect="light">
+                <template #content> log off </template>
+                <a v-on:click="logout">
+                    <el-icon><Close /></el-icon>
+                </a>
+              </el-tooltip>
+        </el-tab-pane>
+      </el-tabs>
+      <!--ui-splash document="Welcome"></ui-splash-->
+    </el-container>
+</div>
+
+{% include 'uit-script.html' %}
+
+
+
+{% include 'uit-footer.html' %}
+
+ 

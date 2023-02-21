@@ -1,0 +1,19 @@
+<span>
+
+    <el-menu-item v-if="mode=='menu'" v-for="item in vnt.myservicelist"
+          :key="item.svcid"
+          :index="item.svcdescr">
+          {{item.level1}}.{{item.level2}}.{{item.level3}}.{{item.level4}} - ({{item.svcdescr}})
+    </el-menu-item>
+    
+    
+    <ul v-if="mode!='menu'">
+    <span v-if="vnt.myservicelist.size==0">you do not provide any services</span>
+    <li v-for="item in vnt.myservicelist"
+          :key="item.svcid"
+          :index="item.svcdescr">
+          {{item.level1}}.{{item.level2}}.{{item.level3}}.{{item.level4}} - ({{item.svcdescr}})
+    </li>
+    </ul>
+    
+</span>

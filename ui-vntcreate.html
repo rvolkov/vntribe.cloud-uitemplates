@@ -1,0 +1,66 @@
+<span>
+  <el-tooltip placement="left" effect="light">
+    <template #content> {{flangp('Create new VNT')}} </template>
+    <el-button type="text" @click="activateCreateVnt()">
+      <el-icon><CirclePlus /></el-icon>
+      {{flangp('Create new VNT')}}
+    </el-button>
+  </el-tooltip>
+  <el-dialog
+      :title="flangp('Create new VNT')"
+      v-model="createvntVisible"
+      :append-to-body="dialog=='true'"
+      width="50%">
+    <el-main>
+      <span>
+        <ui-help document="VntCreate" :actlang="language.activelanguage"></ui-help>
+        <el-form ref="form" :model="createvntform" label-width="140px">
+          <el-form-item :label="flangp('VNT name')">
+            <el-input type="login" placeholder="vnt name" v-model="createvntform.vnt"></el-input>
+          </el-form-item>
+          <el-form-item :label="flangp('Description')">
+            <el-input type="login" placeholder="vnt description" v-model="createvntform.descr"></el-input>
+          </el-form-item>
+          <el-form-item :label="flangp('My nickname')">
+            <el-input type="login" placeholder="my nickname in a new vnt" v-model="createvntform.nickname"></el-input>
+          </el-form-item>
+          <el-form-item :label="flangp('Initial Tokens')">
+            <el-input type="number" placeholder="Initial number of tokens" v-model="createvntform.tokens"></el-input>
+          </el-form-item>
+          <el-form-item :label="flangp('VNTs examples')">
+            <el-col :span="10">
+              <el-select v-model="createvntform.vntexample_selected" placeholder="Select">
+                <el-option value="none" :label="flangp('let users create groups and services manually')"></el-option>
+                <el-option value="file" :label="flangp('upload own template JSON file')"></el-option>
+                <el-option v-for="item in vntexamples_list"
+                    :key="item.name"
+                    :index="item.name"
+                    :value="item.name" :label="item.description">
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="11" v-if="createvntform.vntexample_selected=='file'">
+              <el-upload
+                  class="upload-demo"
+                  action="/vnttemplateupload"
+                  single
+                  :limit="1"
+                  :headers="authorization_header"
+                  :on-change="handleChangeFileList"
+                  :file-list="createvntform.templateFileList">
+                <el-button size="small" type="primary">{{flangp('Click to upload')}}</el-button>
+                <template #tip>
+                  {{flangp('json file with a size less than 500kb')}}
+                </template>
+              </el-upload>
+            </el-col>
+          </el-form-item>
+        </el-form>
+      </span>
+    </el-main>
+    <template #footer>
+      <el-button @click="createvntVisible = false">{{flangp('Cancel')}}</el-button>
+      <el-button type="primary" @click="createvntSubmit()">{{flangp('Confirm')}}</el-button>
+    </template>
+  </el-dialog>
+</span>

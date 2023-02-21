@@ -1,0 +1,49 @@
+
+
+<el-main>
+  <div>{{flangp('ARULES_TEXT')}}</div>
+  <span>
+    <el-button type="text" @click="autoRulesGetCall()">
+      <el-icon><Refresh /></el-icon>
+      {{flangp('Load Auto Rules List')}}
+    </el-button>
+    <el-form ref="form" :inline="true" class="demo-form-inline" label-width="120px">
+      <el-form-item label="Autorules">
+        <el-radio-group v-model="autoRuleId" class="ml-4">
+          <div v-for="i in autoRules">
+            <!--el-radio v-model="autoRulesForm" :name="autoRulesForm" :value="i"-->
+            <el-radio :label="i.autoruleid" size="large" border @change="changeAutoRuleId">
+              ID:{{i.autoruleid}} Desc:{{i.description}} SRCsvc:{{i.srcsvc}} DSTsvc:{{i.dstsvc}} SRCuser:{{i.srcuser}} DSTuser:{{i.dstuser}} Active:{{i.active}}
+            </el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+      <div>
+        <el-form-item label="Src Svc mask">
+          <el-input placeholder="Source Service mask" v-model="autoRulesForm.srcsvc"></el-input>
+        </el-form-item>
+        <el-form-item label="Dst Svc mask">
+          <el-input placeholder="Destination Service mask" v-model="autoRulesForm.dstsvc"></el-input>
+        </el-form-item>
+        <el-form-item label="Src User mask">
+          <el-input placeholder="Source User mask" v-model="autoRulesForm.srcuser"></el-input>
+        </el-form-item>
+        <el-form-item label="Dst User mask">
+          <el-input placeholder="Destination User mask" v-model="autoRulesForm.dstuser"></el-input>
+        </el-form-item>
+        <el-form-item label="Note">
+          <el-input placeholder="Description" v-model="autoRulesForm.description"></el-input>
+        </el-form-item>
+        <el-form-item label="Enabled/Disabled">
+          <el-select v-model="autoRulesForm.active" placeholder="Enabled/Disabled">
+            <el-option label="enabled" value="t"></el-option>
+            <el-option label="disabled" value="f"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-button type="primary" @click="autoRulesAddCall(autoRulesForm.srcsvc, autoRulesForm.dstsvc, autoRulesForm.srcuser, autoRulesForm.dstuser, autoRulesForm.description, autoRulesForm.active)"><el-icon><Plus /></el-icon></el-button>
+        <el-button type="primary" @click="autoRulesModifyCall(autoRulesForm.autoruleid, autoRulesForm.srcsvc, autoRulesForm.dstsvc, autoRulesForm.srcuser, autoRulesForm.dstuser, autoRulesForm.description, autoRulesForm.active)"><el-icon><Check /></el-icon></el-button>
+        <el-button type="primary" @click="autoRulesDelCall(autoRulesForm.autoruleid)"><el-icon><Minus /></el-icon></el-button>
+      </div>
+    </el-form>
+  </span>
+</el-main>

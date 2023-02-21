@@ -1,0 +1,11 @@
+
+<el-upload
+        class="upload-demo"
+        :action="awsUrl"
+        :on-change="onChange"
+        :headers="authorization_header">
+    <el-button size="small" type="primary">Click to upload</el-button>
+    <template #tip>
+        files with a size less than 5000kb
+    </template>
+</el-upload>

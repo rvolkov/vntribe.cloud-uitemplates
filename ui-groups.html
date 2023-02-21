@@ -1,0 +1,15 @@
+<span>
+<el-menu-item v-if="mode=='menu'" v-for="item in vnt.grouplist"
+  :key="item.groupid"
+  :index="item.groupname">
+{{ item.groupname }} - ({{ item.groupdescr }})
+</el-menu-item>
+
+<ul v-if="mode!='menu'">
+<li v-for="item in vnt.grouplist"
+      :key="item.groupid"
+      :index="item.groupname">
+  {{ item.groupname }} - ({{ item.groupdescr }})
+</li>
+</ul>
+</span>

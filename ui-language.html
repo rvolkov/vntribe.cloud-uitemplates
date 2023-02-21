@@ -1,0 +1,21 @@
+
+
+<span>
+<!--el-form ref="form" label-width="120px"-->
+    <!-- VNT language -->
+    <!--el-form-item-->
+      <el-select v-model="language.activelanguage" @change="setLang" placeholder="Select" style="width:120px">
+        <el-option value="eng" label="English">
+        </el-option>
+        <el-option
+          v-for="item in language.listlanguages"
+          :key="item.code"
+          :label="item.name"
+          :value="item.code">
+        </el-option>
+      </el-select>
+      {{ language.activelanguage }}
+      <ui-help document="Language" :actlang="language.activelanguage"></ui-help>
+    <!--/el-form-item-->
+<!--/el-form-->
+</span>

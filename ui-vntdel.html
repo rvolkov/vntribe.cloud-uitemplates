@@ -1,0 +1,42 @@
+<span>
+
+    <el-tooltip placement="left" effect="light">
+        <template #content> {{flangp('Delete VNT')}} </template>
+        <el-button type="text" @click="activateDeleteVnt()">
+          <el-icon><Remove /></el-icon>
+          {{flangp('Delete VNT')}}
+        </el-button>
+    </el-tooltip>
+
+<!-- dialog about delete my VNT -->
+<el-dialog
+title="Delete VNT"
+v-model="deletevntVisible"
+:append-to-body="dialog=='true'"
+width="50%">
+<el-main>
+  <span>
+    <ui-help document="VntDel" :actlang="language.activelanguage"></ui-help>
+    <el-form ref="form" label-width="120px">
+      <el-form-item label="VNT name">
+        <el-radio
+          v-for="item in ownedvntList"
+          :key="item.vntid"
+          :value="item.vntid"
+          :disabled="vnt.activevntid==item.vntid"
+          v-model="vntforDelete" :label="item.vntid" border>{{ item.vntname }}</el-radio>
+      </el-form-item>
+      <el-form-item>
+        <!--el-checkbox v-model="checked">Option</el-checkbox-->
+        <el-checkbox border>Force delete together with all users</el-checkbox>
+      </el-form-item>
+    </el-form>
+  </span>
+</el-main>
+<template #footer>
+    <el-button @click="deletevntVisible = false">Cancel</el-button>
+    <el-button type="primary" @click="deletevntSubmit()">Confirm</el-button>
+</template>
+ </el-dialog>
+
+</span>

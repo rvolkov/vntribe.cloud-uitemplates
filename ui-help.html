@@ -1,0 +1,16 @@
+<span>
+  <el-button type="text" @click="dialogVisible = true; HelpGetCall()"><el-icon><QuestionFilled /></el-icon></el-button>
+    
+  <el-dialog
+    :title="'Document: '+document"
+    v-model="dialogVisible"
+    width="80%"
+    :fullscreen="false"
+    :append-to-body="true">
+    
+    <span>
+      <VueShowdown :markdown="content"/>
+    </span>
+    
+  </el-dialog>
+</span>

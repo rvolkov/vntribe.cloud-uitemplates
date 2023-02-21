@@ -1,0 +1,155 @@
+<!-- 
+    
+    uit-header.html
+    User Interface Template header
+    add it to any other uit base file
+
+-->
+<!DOCTYPE html>
+<html>
+  <!--- test string for unit test test_vnt_html, DO NOT REMOVE -->
+  <head>
+    <meta charset="UTF-8">
+
+    <!--script type="text/javascript"
+      src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+      integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+      crossorigin="anonymous">
+    </script-->
+    <!-- import CSS for Element-UI -->
+    <!--link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"-->
+    <link rel="stylesheet" href="//unpkg.com/element-plus/dist/index.css" />
+    <!-- import Vue.js -->
+    <!--script src="https://unpkg.com/vue/dist/vue.min.js"></script-->
+    <script src="https://unpkg.com/vue@3"></script>
+    <!-- import Element-UI -->
+    <!--script src="//unpkg.com/element-ui"></script-->
+    <script src="//unpkg.com/element-plus"></script>
+    <!-- english locale for element -->
+    <!--script src="//unpkg.com/element-ui/lib/umd/locale/en.js"></script-->
+    <!-- axios - REST API client library -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- lodash -->
+    <script src="https://cdn.jsdelivr.net/npm/lodash/lodash.min.js"></script>
+    <!-- moment.js -->
+    <!--script src="//unpkg.com/moment"></script-->
+    <!-- vis-network.min.js -->
+    <!--script src="//unpkg.com/vis-network"></script-->
+    <!-- d3 -->
+    <!--script src="https://d3js.org/d3.v5.min.js"></script-->
+    <!-- vue-showdown - show markdown as html -->
+    <!--script src="//unpkg.com/showdown"></script-->
+    <!--script src="//unpkg.com/vue-showdown@2.x"></script-->
+    <!--script src="https://unpkg.com/showdown"></script-->
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js"></script>
+    <script src="https://unpkg.com/vue-showdown"></script>
+    <!--link rel="stylesheet" href="https://unpkg.com/vue-simple-markdown/dist/vue-simple-markdown.css"></link>
+    <script src="https://unpkg.com/vue-simple-markdown"></script-->
+    <!-- intro.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/4.2.2/intro.min.js"></script>
+    <!-- element-plus icons -->
+    <script src="//unpkg.com/@element-plus/icons-vue"></script>
+
+    <!-- project libraries -->
+    <!--script src="/libs/event.js"></script-->
+    <!-- BEGIN of vue components -->
+    <script src="/mixinlang.js"></script>
+    <script src="/mixinvnt.js"></script>
+    <script src="/ui-help.js"></script>
+    <script src="/ui-attach.js"></script>
+    <script src="/ui-news.js"></script>
+    <script src="/ui-splash.js"></script>
+    <script src="/ui-services.js"></script>
+    <script src="/ui-vntselector.js"></script>
+    <script src="/ui-uitemplate.js"></script>
+    <script src="/ui-topmenu.js"></script>
+    <script src="/ui-groups.js"></script>
+    <script src="/ui-myservices.js"></script>
+    <script src="/ui-present.js"></script>
+    <script src="/ui-topology.js"></script>
+    <script src="/ui-docs.js"></script>
+    <script src="/ui-support.js"></script>
+    <script src="/ui-account.js"></script>
+    <script src="/ui-language.js"></script>
+    <script src="/ui-sfilter.js"></script>
+    <script src="/ui-arules.js"></script>
+    <script src="/ui-files.js"></script>
+    <script src="/ui-requests.js"></script>
+    <script src="/ui-vntcreate.js"></script>
+    <script src="/ui-vntdel.js"></script>
+    <script src="/ui-text.js"></script>
+    <!-- END of vue components -->
+
+    <!-- Styles -->
+    <style type="text/css">
+      .servicecounter {
+        margin-right: 100px;
+      }
+      .el-header {
+        background-color: #B3C0D1;
+        color: #333;
+        line-height: 50px;
+      }
+      .el-aside {
+        color: #333;
+      }
+      #mynetwork {
+        width: 600px;
+        height: 400px;
+        border: 1px solid lightgray;
+      }
+      .el-drawer__body {
+		    height: 100%;
+		    box-sizing: border-box;
+		    overflow-y: auto;
+	    }
+      
+      .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+      }
+
+    
+                .el-row {
+                  margin-bottom: 20px;
+                  &:last-child {
+                    margin-bottom: 0;
+                  }
+                }
+                .el-col {
+                  border-radius: 4px;
+                }
+                .bg-purple-dark {
+                  background: #99a9bf;
+                }
+                .bg-purple {
+                  background: #d3dce6;
+                }
+                .bg-purple-light {
+                  background: #e5e9f2;
+                }
+                .grid-content {
+                  border-radius: 4px;
+                  min-height: 36px;
+                }
+                .row-bg {
+                  padding: 10px 0;
+                  background-color: #f9fafc;
+                }
+            
+    </style>
+    <!--
+html { 
+        background: url(/surf.jpeg) no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+    -->
+    <!--meta name="viewport" content="width=device-width, user-scalable=no, 
+    initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"-->
+
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes'>
+    <title>VNTribe</title>
+</head>

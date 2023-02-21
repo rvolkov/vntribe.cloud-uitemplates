@@ -1,0 +1,59 @@
+
+  <el-main>
+  <div>{{flangp('SFILTERS_TEXT')}}</div>
+  <span>
+    <el-button type="text" @click="svcFiltersGetCall()">
+      <el-icon><Refresh /></el-icon>
+      {{flangp('Load Service Filters')}}
+    </el-button>
+    <el-form :inline="true" class="demo-form-inline" ref="form" label-width="120px">
+      <el-form-item label="Filters">
+        <el-radio-group v-model="svcFilterId" class="ml-4">
+          <div v-for="i in svcFilters">
+            <el-radio :label="i.svcfilterid" size="large" border @change="changeSvcFilterId">
+              ID:{{i.svcfilterid}} Desc:{{i.descr}} Filter:{{i.l1rule}}.{{i.l2rule}}.{{i.l3rule}}.{{i.l4rule}} Active:{{i.active}}
+            </el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+      <div>
+        <el-form-item label="L1">
+          <el-input placeholder="l1 mask" v-model="svcFiltersForm.l1rule"></el-input>
+        </el-form-item>
+        <el-form-item label="L2">
+          <el-input placeholder="l2 mask" v-model="svcFiltersForm.l2rule"></el-input>
+        </el-form-item>
+        <el-form-item label="L3">
+          <el-input placeholder="l3 mask" v-model="svcFiltersForm.l3rule"></el-input>
+        </el-form-item>
+        <el-form-item label="L4">
+          <el-input placeholder="l4 mask" v-model="svcFiltersForm.l4rule"></el-input>
+        </el-form-item>
+        <el-form-item label="Note">
+          <el-input placeholder="Description" v-model="svcFiltersForm.descr"></el-input>
+        </el-form-item>
+        <el-form-item label="Rule status">
+          <el-select v-model="svcFiltersForm.active" placeholder="Enabled/Disabled">
+            <el-option label="enabled" value="t"></el-option>
+            <el-option label="disabled" value="f"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <!--el-checkbox v-model="checked">Option</el-checkbox-->
+          <el-checkbox v-model="svcFiltersForm.incme" border>Include myself</el-checkbox>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="svcFiltersAddCall(svcFiltersForm.l1rule, svcFiltersForm.l2rule, svcFiltersForm.l3rule, svcFiltersForm.l4rule, svcFiltersForm.descr, svcFiltersForm.incme)">
+            <el-icon><CirclePlus /></el-icon>
+          </el-button>
+          <el-button type="primary" @click="svcFiltersModifyCall(svcFiltersForm.svcfilterid,svcFiltersForm.l1rule,svcFiltersForm.l2rule, svcFiltersForm.l3rule, svcFiltersForm.l4rule, svcFiltersForm.descr, svcFiltersForm.active, svcFiltersForm.incme)">
+            <el-icon><CircleCheck /></el-icon>
+          </el-button>
+          <el-button type="primary" @click="svcFiltersDelCall(svcFiltersForm.svcfilterid)">
+            <el-icon><Remove /></el-icon>
+          </el-button>
+        </el-form-item>
+      </div>
+    </el-form>
+  </span>
+</el-main>

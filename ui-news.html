@@ -1,0 +1,33 @@
+<span>
+
+
+    <el-form ref="form" :inline="true" class="demo-form-inline">
+      <el-form-item label="Subject">
+        <el-input placeholder="Subject" v-model="NewsForm.subject"></el-input>
+      </el-form-item>
+      <el-form-item label="News text">
+        <el-input placeholder="News text" type="textarea" v-model="NewsForm.newstext"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="NewsAddCall(NewsForm.subject, NewsForm.newstext)"><el-icon><CirclePlus /></el-icon></el-button>
+      </el-form-item>
+    </el-form>
+    <el-main>
+      <div class="infinite-list" style="overflow:auto">
+        <!--li v-for="i in news_list.slice().reverse()" class="infinite-list-item"-->
+          <el-card class="box-card; infinite-list-item" v-for="i in news_list.slice().reverse()" :key="i.created">
+            <template #header>
+              <el-button style="float: left; padding: 3px 0" type="text">{{i.subject}}</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" disabled>{{i.created}} by {{i.nickname}}</el-button>
+            </template>
+            <div class="text item" style="float: left">
+              {{i.newstext}}
+            </div>
+          </el-card>
+          <!--{{i.created}} by {{i.nickname}}: {{i.subject}}
+          <p>{{i.newstext}}</p>-->
+        <!--/li-->
+      </div>
+    </el-main>
+
+</span>

@@ -1,0 +1,43 @@
+<!-- 
+    
+    uit-office.html
+
+-->
+
+{% include 'uit-header.html' %}
+
+
+<div id="vnt">
+  <!-- top menu -->
+  <ui-topmenu></ui-topmenu>
+  <el-container>
+    <el-aside width="20%">
+      <ui-services></ui-services>
+    </el-aside>
+    <!-- messages boxes -->
+    <el-main width="80%">
+      <ui-requests></ui-requests>
+    </el-main>
+    
+  </el-container>
+
+</div>
+
+{% include 'uit-script.html' %}
+
+</body>
+
+<style>
+html { 
+  background: url(/surf.jpeg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+</style>
+
+{% include 'uit-footer.html' %}
+
+
+

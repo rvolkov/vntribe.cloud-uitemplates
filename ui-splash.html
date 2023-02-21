@@ -1,0 +1,17 @@
+
+<el-dialog
+  :title="document"
+  v-model="splashVisible"
+  width="80%"
+  :fullscreen="false"
+  :append-to-body="true">
+  <span>
+    <VueShowdown :markdown="content" flavor="github" :options="{ emoji: true }"/>
+  </span>
+
+  <template #footer>
+    <el-button type="primary" @click="splashVisible = false">
+      <el-icon><CircleClose /></el-icon>
+    </el-button>
+  </template>
+</el-dialog>

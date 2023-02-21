@@ -1,0 +1,12 @@
+
+
+<span>
+    <el-select v-model="vnt.activeuitemplate" @change="activateUITemplate" placeholder="Select" style="width:185px">
+      <el-option v-for="item in vnt.uitemplateslist"
+        :key="item.id"
+        :index="item.name"
+        :value="item.id" :label="item.descr">
+      </el-option>
+    </el-select>
+    <ui-help document="View" :actlang="language.activelanguage"></ui-help>
+</span>

@@ -1,0 +1,27 @@
+<span>
+  <el-button type="text" @click="loadTopoImage()">
+    <el-icon><Refresh /></el-icon>
+          {{flangp('Load Topology Map')}}
+  </el-button>
+    <h4>VNT: {{ vnt.vntname }}</h4>
+    <div>
+      <ul>
+        <li v-for="item in groupsmap"
+            :key="item.groupname"
+            :index="item.groupname">
+          Group: {{ item.groupname }}
+          <ul>
+            <li v-for="uitem in item.users"
+                :key="uitem.username"
+                :index="uitem.username">
+              User: {{ uitem.username }}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <img :src="VntTopoSrc" \>
+    </div>
+</span>

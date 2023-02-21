@@ -1,0 +1,60 @@
+<!-- Support cases -->
+<el-form ref="form" label-width="120px">
+  <el-button type="text" @click="SupportGetCall()">
+    <el-icon><Refresh /></el-icon>
+          {{flangp('Reload Cases List')}}
+  </el-button>
+    <el-form-item label="Support cases">
+      <el-table
+      :data="support_list"
+      highlight-current-row
+      style="width: 100%"
+      @current-change="handleCurrentChange">
+      <!--el-table-column
+        label="Select"
+        width="80">
+        <input type="radio" v-model="SupportForm" name="SupportForm" :value="currentRow"> </input>
+      </el-table-column-->
+      <el-table-column
+        prop="user"
+        label="User"
+        width="80">
+      </el-table-column>
+      <el-table-column
+        prop="action"
+        label="Action"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="question"
+        label="Question"
+        width="400">
+      </el-table-column>
+      <el-table-column
+        prop="answer"
+        label="Answer"
+        width="400">
+      </el-table-column>
+    </el-table>
+      <!--div v-for="i in support_list">
+        <input type="radio" v-model="SupportForm" name="SupportForm" :value="i"> User:{{i.user}} Action:{{i.action}} Question:{{i.question}} Answer:{{i.answer}}</input>
+      </div-->
+    </el-form-item>
+    <el-form-item label="Action">
+      <el-select v-model="SupportForm.action" placeholder="Action">
+        <el-option label="Help" value="help"></el-option>
+        <el-option label="Feature Request" value="feature request"></el-option>
+        <el-option label="Feedback" value="feedback"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="Question">
+      <el-input placeholder="Question" type="textarea" v-model="SupportForm.question"></el-input>
+    </el-form-item>
+    <el-form-item label="Answer">
+      <el-input placeholder="Answer" type="textarea" v-model="SupportForm.answer"></el-input>
+    </el-form-item>
+    <el-button type="primary" @click="SupportAddCall(SupportForm)">Add support case</el-button>
+    <el-button type="primary" @click="SupportModifyCall(SupportForm.supportid, SupportForm.answer)">Update answer</el-button>
+    <el-button type="primary" @click="SupportDelCall(SupportForm)">Delete support case</el-button>
+</el-form>
+<!-- END support cases -->
